@@ -12,21 +12,25 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
+    private final TaskService taskService;
+
     @Autowired
-    private TaskService taskService;
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @GetMapping
     public List<TaskResponse> getAllTasks() {
         return taskService.getAllTasks();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public TaskResponse createTask(@RequestBody CreateTaskRequest request) {
         return taskService.createTask(request);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskResponse> markTaskAsCompleted(@PathVariable Long id) {
+    public ResponseEntity<TaskResponse> markTaskAsCompleted(@PathVariable("id") Long id) {
         return ResponseEntity.ok(taskService.markTaskAsCompleted(id));
     }
 }
