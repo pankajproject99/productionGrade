@@ -19,16 +19,30 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    /**
+     * Get all tasks
+     * @return List of TaskResponse objects
+     */
     @GetMapping
     public List<TaskResponse> getAllTasks() {
         return taskService.getAllTasks();
     }
 
+    /**
+     * Create a new task
+     * @param request The CreateTaskRequest object containing task details
+     * @return The created TaskResponse object
+     */
     @PostMapping("/create")
     public TaskResponse createTask(@RequestBody CreateTaskRequest request) {
         return taskService.createTask(request);
     }
 
+    /**
+     * Mark a task as completed
+     * @param id The ID of the task to be marked as completed
+     * @return ResponseEntity containing the updated TaskResponse object
+     */
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponse> markTaskAsCompleted(@PathVariable("id") Long id) {
         return ResponseEntity.ok(taskService.markTaskAsCompleted(id));
