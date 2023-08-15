@@ -13,38 +13,41 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(TaskServiceException.class)
-    public ResponseEntity<Map<String, Object>> handleTaskServiceException(TaskServiceException e) {
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    public ResponseEntity<ErrorResponse> handleTaskServiceException(TaskServiceException e) {
+        ErrorResponse errorResponse = buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getErrorCode(), e.getMessage());
+        errorResponse.addDetail("Additional detail about the error.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
     @ExceptionHandler(TaskNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleTaskNotFoundException(TaskNotFoundException e) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    public ResponseEntity<ErrorResponse> handleTaskNotFoundException(TaskNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(buildErrorResponse(HttpStatus.NOT_FOUND, ErrorCode.TASK_NOT_FOUND, e.getMessage()));
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFoundException(NotFoundException e) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    public ResponseEntity<ErrorResponse>  handleNotFoundException(NotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(buildErrorResponse(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, e.getMessage()));
     }
 
+
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Map<String, Object>> handleBadRequestException(BadRequestException e) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+    public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(buildErrorResponse(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST, e.getMessage()));
     }
 
     //Runtime exception not required as Exception will take care
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
         String errorMessage = "An unexpected " + e.getClass().getSimpleName() + " occurred: " + e.getMessage();
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.UNEXPECTED_ERROR, errorMessage));
     }
 
-    private ResponseEntity<Map<String, Object>> buildErrorResponse(HttpStatus status, String message) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("timestamp", LocalDateTime.now());
-        errorResponse.put("status", status.value());
-        errorResponse.put("error", status.getReasonPhrase());
-        errorResponse.put("message", message);
-        return ResponseEntity.status(status).body(errorResponse);
+    private ErrorResponse buildErrorResponse(HttpStatus status, ErrorCode errorCode, String message) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setStatus(status.value());
+        errorResponse.setError(status.getReasonPhrase());
+        errorResponse.setMessage(message);
+        return errorResponse;
     }
 }
