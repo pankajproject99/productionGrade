@@ -2,6 +2,8 @@ package com.example.productionGrade.controller;
 
 import com.example.productionGrade.Dto.CreateTaskRequest;
 import com.example.productionGrade.Dto.TaskResponse;
+import com.example.productionGrade.exception.BadRequestException;
+import com.example.productionGrade.exception.NotFoundException;
 import com.example.productionGrade.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +46,7 @@ public class TaskController {
         try {
             return taskService.createTask(request);
         } catch (Exception e) {
-            throw new RuntimeException("Error creating task: " + e.getMessage());
+            throw new BadRequestException("Invalid request: " + e.getMessage());
         }
     }
 
@@ -56,15 +58,28 @@ public class TaskController {
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponse> markTaskAsCompleted(@PathVariable("id") Long id) {
         try {
-            return ResponseEntity.ok(taskService.markTaskAsCompleted(id));
+            TaskResponse response = taskService.markTaskAsCompleted(id);
+            if (response == null) {
+                throw new NotFoundException("Task with ID " + id + " not found.");
+            }
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             throw new RuntimeException("Error marking task as completed: " + e.getMessage());
         }
     }
 
-    // Global exception handler
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> handleBadRequestException(BadRequestException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleException(RuntimeException e) {
+    public ResponseEntity<String> handleRuntimeException(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 }
