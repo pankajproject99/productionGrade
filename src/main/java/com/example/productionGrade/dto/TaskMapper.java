@@ -1,6 +1,6 @@
-package com.example.productionGrade.Dto;
+package com.example.productionGrade.dto;
 
-import com.example.productionGrade.Entity.Task;
+import com.example.productionGrade.entity.Task;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 

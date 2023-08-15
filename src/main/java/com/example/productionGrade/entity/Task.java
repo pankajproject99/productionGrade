@@ -1,4 +1,4 @@
-package com.example.productionGrade.Entity;
+package com.example.productionGrade.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

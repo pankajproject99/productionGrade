@@ -1,4 +1,4 @@
-package com.example.productionGrade.Dto;
+package com.example.productionGrade.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,9 +1,9 @@
 package com.example.productionGrade.service;
 
-import com.example.productionGrade.Dto.CreateTaskRequest;
-import com.example.productionGrade.Dto.TaskMapper;
-import com.example.productionGrade.Dto.TaskResponse;
-import com.example.productionGrade.Entity.Task;
+import com.example.productionGrade.dto.CreateTaskRequest;
+import com.example.productionGrade.dto.TaskMapper;
+import com.example.productionGrade.dto.TaskResponse;
+import com.example.productionGrade.entity.Task;
 import com.example.productionGrade.repo.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

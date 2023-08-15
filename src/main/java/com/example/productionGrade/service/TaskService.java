@@ -1,7 +1,7 @@
 package com.example.productionGrade.service;
 
-import com.example.productionGrade.Dto.CreateTaskRequest;
-import com.example.productionGrade.Dto.TaskResponse;
+import com.example.productionGrade.dto.CreateTaskRequest;
+import com.example.productionGrade.dto.TaskResponse;
 
 import java.util.List;
 
