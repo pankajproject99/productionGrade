@@ -3,6 +3,7 @@ package com.example.productionGrade.controller;
 import com.example.productionGrade.dto.CreateTaskRequest;
 import com.example.productionGrade.dto.TaskResponse;
 import com.example.productionGrade.exception.BadRequestException;
+import com.example.productionGrade.exception.ErrorCode;
 import com.example.productionGrade.exception.TaskNotFoundException;
 import com.example.productionGrade.exception.TaskServiceException;
 import com.example.productionGrade.service.TaskService;
@@ -33,7 +34,7 @@ public class TaskController {
         try {
             return taskService.getAllTasks();
         } catch (TaskServiceException e) {
-            throw new RuntimeException("Error retrieving tasks: " + e.getMessage());
+            throw new TaskServiceException(ErrorCode.TASK_SERVICE_ERROR, "Error retrieving tasks: " + e.getMessage());
         }
     }
 
@@ -65,7 +66,7 @@ public class TaskController {
             }
             return ResponseEntity.ok(response);
         } catch (TaskServiceException e) {
-            throw new RuntimeException("Error marking task as completed: " + e.getMessage());
+            throw new TaskServiceException(ErrorCode.TASK_SERVICE_ERROR, "Error marking task as completed: " + e.getMessage());
         }
     }
 }

@@ -1,7 +1,14 @@
 package com.example.productionGrade.exception;
 
 public class TaskServiceException extends RuntimeException {
-    public TaskServiceException(String message) {
+    private final ErrorCode errorCode;
+
+    public TaskServiceException(ErrorCode errorCode, String message) {
         super(message);
+        this.errorCode = errorCode;
+    }
+
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 }
