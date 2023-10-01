@@ -7,6 +7,7 @@ import com.example.productionGrade.exception.ErrorCode;
 import com.example.productionGrade.exception.TaskNotFoundException;
 import com.example.productionGrade.exception.TaskServiceException;
 import com.example.productionGrade.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class TaskController {
      * @return The created TaskResponse object
      */
     @PostMapping("/create")
-    public TaskResponse createTask(@RequestBody CreateTaskRequest request) {
+    public TaskResponse createTask(@Valid @RequestBody CreateTaskRequest request) {
         try {
             return taskService.createTask(request);
         } catch (TaskServiceException e) {
