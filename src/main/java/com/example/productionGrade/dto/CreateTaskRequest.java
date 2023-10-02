@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class CreateTaskRequest {
-    @NotEmpty
+    @NotEmpty(message = "title must not be empty")
     @Size(max = 100)
     private String title;
 
