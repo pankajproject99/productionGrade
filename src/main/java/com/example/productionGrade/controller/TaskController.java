@@ -33,6 +33,7 @@ public class TaskController {
 
     /**
      * Get all tasks
+     *
      * @return List of TaskResponse objects
      */
     @GetMapping
@@ -46,6 +47,7 @@ public class TaskController {
 
     /**
      * Create a new task
+     *
      * @param request The CreateTaskRequest object containing task details
      * @return The created TaskResponse object
      */
@@ -62,6 +64,7 @@ public class TaskController {
 
     /**
      * Mark a task as completed
+     *
      * @param id The ID of the task to be marked as completed
      * @return ResponseEntity containing the updated TaskResponse object
      */
