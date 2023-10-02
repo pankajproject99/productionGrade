@@ -8,6 +8,7 @@ import com.example.productionGrade.exception.TaskNotFoundException;
 import com.example.productionGrade.exception.TaskServiceException;
 import com.example.productionGrade.service.TaskService;
 import com.example.productionGrade.validate.Validate;
+import com.example.productionGrade.validation.TaskRequestValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,10 +22,13 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
+    private final TaskRequestValidator validator;
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, TaskRequestValidator validator) {
+
         this.taskService = taskService;
+        this.validator = validator;
     }
 
     /**
@@ -49,6 +53,7 @@ public class TaskController {
     @Validate
     public TaskResponse createTask(@Valid @RequestBody CreateTaskRequest request) {
         try {
+            validator.validate(request);
             return taskService.createTask(request);
         } catch (TaskServiceException e) {
             throw new BadRequestException("Invalid request: " + e.getMessage());
