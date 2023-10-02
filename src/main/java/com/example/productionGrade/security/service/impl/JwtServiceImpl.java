@@ -18,8 +18,10 @@ import java.util.function.Function;
 
 @Service
 public class JwtServiceImpl implements JwtService {
+    // SECRET_KEY is injected from spring property
     @Value("${token.signing.key}")
     private String jwtSigningKey;
+    private static final int EXPIRATION_TIME = 1000 * 60 * 24; // milliseconds // This constant defines the expiration time for JWT tokens.
     @Override
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -44,7 +46,7 @@ public class JwtServiceImpl implements JwtService {
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
