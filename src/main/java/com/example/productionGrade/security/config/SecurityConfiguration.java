@@ -28,8 +28,10 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Bug fix as h2 console was showing blank
+        http.headers().frameOptions().disable();
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers(antMatcher("/api/v1/auth/**"))
+                .authorizeHttpRequests(request -> request.requestMatchers(antMatcher("/api/v1/auth/**"), antMatcher("/h2-console/**"))
                         .permitAll().anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
