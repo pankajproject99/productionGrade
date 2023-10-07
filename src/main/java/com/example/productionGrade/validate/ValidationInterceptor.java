@@ -5,6 +5,7 @@ import com.example.productionGrade.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
@@ -12,11 +13,13 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
 @Component
+@Slf4j
 public class ValidationInterceptor implements HandlerInterceptor {
     private Validator validator;
 
@@ -46,6 +49,10 @@ public class ValidationInterceptor implements HandlerInterceptor {
             }
 
             //POST body should not be null
+            // Log the request time
+            log.info("Request received at {}", request.getUserPrincipal());
+            // Log the request body
+//            log.info("Request body: {}", request.getReader().readLine());
             String requestMethod = request.getMethod();
             if(requestMethod.equals("POST")){
                 int contentLength = request.getContentLength();
@@ -55,5 +62,15 @@ public class ValidationInterceptor implements HandlerInterceptor {
             }
         }
         return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+        // Log the response status code
+        log.info("Response status code: {}", response.getStatus());
+
+        // Log the response body
+//        log.info("Response body: {}", response.getWriter());
     }
 }
