@@ -1,6 +1,5 @@
 package com.example.productionGrade.security.dao.request;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -19,4 +18,5 @@ public class SignUpRequest {
     private String email;
     @NotEmpty
     private String password;
+    private String role;
 }

@@ -1,6 +1,8 @@
 package com.example.productionGrade.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -43,11 +45,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.info("Exception: MethodArgumentNotValidException");
+        log.info("Global Exception: MethodArgumentNotValidException");
         BindingResult result = e.getBindingResult();
         Map<String, String> errors = result.getFieldErrors().stream()
                 .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(buildErrorResponse(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST, errors.toString()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(HttpServletRequest req, DataIntegrityViolationException e) {
+        log.info("Global Exception: DataIntegrityViolationException : " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(buildErrorResponse(HttpStatus.CONFLICT, ErrorCode.CONFLICT,
+                req.getRequestURL() + " : " + ErrorCode.CONFLICT.description()));
     }
 
     //Runtime exception not required as Exception will take care

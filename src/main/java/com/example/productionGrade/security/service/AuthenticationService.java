@@ -6,6 +6,7 @@ import com.example.productionGrade.security.dao.response.JwtAuthenticationRespon
 
 public interface AuthenticationService {
     JwtAuthenticationResponse signup(SignUpRequest request);
+//    User1 signup1(SignUpRequest request);
 
     JwtAuthenticationResponse signin(SigninRequest request);
 }
